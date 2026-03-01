@@ -1,9 +1,67 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import { createClient } from "@libsql/client";
+import { getRandomStar, getChromaticity } from "@utils/starCatalog";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../layouts/Layout.astro";
+
+import starData from "../data/star-catalog.json";
+
+const starByHR = Object.fromEntries(starData.map((s) => [s.HR, s]));
+
+const turso = createClient({
+	url: import.meta.env.TURSO_DATABASE_URL,
+	authToken: import.meta.env.TURSO_AUTH_TOKEN,
+});
+
+if (Astro.request.method === "POST") {
+	const formData = await Astro.request.formData();
+	const star = getRandomStar();
+	const name = formData.get("name") as string;
+	const birthYear = formData.get("birth_year") as string;
+	const deathYear = formData.get("death_year") as string;
+
+	await turso.execute(
+		"INSERT INTO stars (star_hr, name, birth_year, death_year) VALUES (?, ?, ?, ?)",
+		[star.HR, name, birthYear, deathYear],
+	);
+	return Astro.redirect("/");
+}
+
+const entries = await turso.execute("SELECT * FROM stars");
 ---
 
 <Layout>
+	<form method="post" class="flex flex-col">
+		<label for="name">Name:</label>
+		<input name="name" type="text" required />
+		<label for="birth_year">Birth Year:</label>
+		<input name="birth_year" type="text" />
+		<label for="death_year">Death Year:</label>
+		<input name="death_year" type="text" required />
+		<button type="submit">Submit</button>
+	</form>
+	<div class="">
+		<h2>Stars</h2>
+		<div>
+			{
+				entries.rows.map((row) => {
+					const star = starByHR[row.star_hr as string];
+					const color = getChromaticity(star["Sp Type"]);
+					return (
+						<div>
+							{row.name} - Born: {row.birth_year}, Died: {row.death_year}
+							{star && (
+								<details>
+									<summary>Star Details</summary>
+									<p>Name: {star.Name || star.ID}</p>
+									<p>Color: {color}</p>
+									<p>Magnitude: {star.Vmag}</p>
+								</details>
+							)}
+						</div>
+					);
+				})
+			}
+		</div>
+	</div>
 </Layout>
