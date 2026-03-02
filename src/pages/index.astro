@@ -122,20 +122,30 @@ const stars = entries.rows
 			</a>
 			<p class="text-xs opacity-50">{stars.length} companions in the sky</p>
 		</div>
-
-		<button
-			id="openBtn"
-			class="pointer-events-auto cursor-pointer self-end rounded-full bg-white/5 px-4 py-2 text-white hover:bg-white/10"
-		>
-			<span class="mr-1.25">✦</span>Place a Star
-		</button>
+		<div class="self-end">
+			<audio id="ambient" autoplay loop>
+				<source
+					src="sounds/The Museum - Andrew Prahlow.mp3"
+					type="audio/mpeg"
+				/>
+			</audio>
+			<script>
+				(document.getElementById("ambient") as HTMLAudioElement).volume = 0.2;
+			</script>
+			<button
+				id="openBtn"
+				class="pointer-events-auto cursor-pointer rounded-full bg-white/5 px-4 py-2 text-white hover:bg-white/10"
+			>
+				<span class="mr-1.25">✦</span>Place a Star
+			</button>
+		</div>
 	</div>
 	<div
 		id="formModal"
 		class="fixed inset-0 z-100 hidden h-full items-center justify-center backdrop-blur-sm"
 	>
 		<div
-			class="mx-5 flex max-w-md flex-col space-y-6 rounded-2xl bg-sky-dark/70 p-8 shadow-xl shadow-black/30 backdrop-blur-md"
+			class="bg-sky-dark/70 mx-5 flex max-w-md flex-col space-y-6 rounded-2xl p-8 shadow-xl shadow-black/30 backdrop-blur-md"
 		>
 			<div>
 				<div class="mb-4 flex justify-between">
