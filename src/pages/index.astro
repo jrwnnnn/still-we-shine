@@ -1,9 +1,9 @@
 ---
 import { createClient } from "@libsql/client";
+import { BlobServiceClient } from "@azure/storage-blob";
 import { setPosition } from "@utils/setPosition";
 import { hashSeed } from "@utils/random";
 import { getRandomStar } from "@utils/star";
-import { focusStar } from "@utils/focusStar";
 import renderStar from "@utils/renderStar";
 import Layout from "@layouts/Layout.astro";
 import Star from "@components/Star.astro";
@@ -20,24 +20,65 @@ let error = "";
 
 if (Astro.request.method === "POST") {
 	const formData = await Astro.request.formData();
+
+	const token = formData.get("recaptcha_token");
+	const recaptchaVerify = await fetch(
+		`https://www.google.com/recaptcha/api/siteverify?secret=${import.meta.env.RECAPTCHA_SECRET_KEY}&response=${token}`,
+		{
+			method: "POST",
+		},
+	);
+	const recaptchaData = await recaptchaVerify.json();
+
 	const name = (formData.get("name") as string)?.trim();
 	const birthYear = (formData.get("birth_year") as string)?.trim();
 	const deathYear = (formData.get("death_year") as string)?.trim();
+	const message = (formData.get("message") as string)?.trim();
+	const image = formData.get("image") as File;
 	const star = getRandomStar();
 
-	if (!name) {
-		error = "Please enter a name.";
-	} else if (!birthYear || !deathYear) {
-		error = "Please enter both birth and death year.";
+	if (
+		!recaptchaData.success ||
+		recaptchaData.score < 0.5 ||
+		recaptchaData.action !== "submit"
+	) {
+		error = "Security check failed. Please try again.";
+	} else if (image && image.size > 2 * 1024 * 1024) {
+		error = "Image must be under 2MB.";
+	} else if (!name || !birthYear || !deathYear) {
+		error = "Please fill in all required fields.";
 	} else if (parseInt(birthYear) > parseInt(deathYear)) {
 		error = "Birth year must be before death year.";
 	} else {
-		const result = await turso.execute(
-			"INSERT INTO stars (star_hr, name, birth_year, death_year) VALUES (?, ?, ?, ?)",
-			[star.HR, name, birthYear, deathYear],
-		);
+		let imageUrl = null;
 
-		return Astro.redirect("/star/" + result.lastInsertRowid);
+		if (image && image.size > 0) {
+			try {
+				const blobService = BlobServiceClient.fromConnectionString(
+					import.meta.env.AZURE_CONNECTION_STRING,
+				);
+				const containerClient = blobService.getContainerClient("images");
+				const blobName = `${Date.now()}-${image.name.replace(/\s+/g, "-")}`;
+				const blobClient = containerClient.getBlockBlobClient(blobName);
+
+				const arrayBuffer = await image.arrayBuffer();
+				await blobClient.uploadData(arrayBuffer, {
+					blobHTTPHeaders: { blobContentType: image.type },
+				});
+				imageUrl = blobClient.url;
+			} catch (e) {
+				error = "Failed to upload image.";
+			}
+		}
+
+		if (!error) {
+			const result = await turso.execute({
+				sql: "INSERT INTO stars (star_hr, name, birth_year, death_year, message, image_url) VALUES (?, ?, ?, ?, ?, ?)",
+				args: [star.HR, name, birthYear, deathYear, message, imageUrl],
+			});
+
+			return Astro.redirect("/star/" + result.lastInsertRowid);
+		}
 	}
 }
 
@@ -72,14 +113,15 @@ const stars = entries.rows
 ---
 
 <!-- TODO: 
-- Constellations?
-- Refactor: Convert the viewport to canvas. -->
+track sender using IP address or fingerprinting to prevent spam and innappropriate submissions 
+fix the star links to not get triggered when panning the viewport
+privacy policy page
+report component
+deploy
+-->
 <Layout>
 	<div id="viewport" class="bg-sky-dark fixed inset-0 overflow-hidden">
-		<div
-			id="canvas"
-			class="absolute h-[375vmax] w-[375vmax] md:h-[187.5vmax]"
-		>
+		<div id="canvas" class="absolute h-[375vmax] w-[375vmax] md:h-[187.5vmax]">
 			<Sky star_intensity="1000" meteor_count="10" />
 			{
 				stars.map((s) => (
@@ -159,49 +201,8 @@ const stars = entries.rows
 		class="pointer-events-auto fixed inset-0 backdrop-blur-sm"
 	>
 	</div>
-	<div
-		class="bg-sky-dark/70 flex w-full flex-col space-y-6 rounded-2xl p-8 shadow-xl shadow-black/30 backdrop-blur-md md:max-w-md"
-	>
-		<div>
-			<div class="mb-4 flex justify-between">
-				<p
-					class="text-xl text-indigo-200/50 [text-shadow:0_0_12px_rgba(199,210,254,0.4)]"
-				>
-					✦
-				</p>
-				<button
-					id="exitBtn"
-					class="cursor-pointer text-2xl text-white/40 transition hover:text-white"
-				>
-					&times;
-				</button>
-			</div>
-			<h1 class="mb-2 text-2xl font-medium tracking-tight text-white">
-				Place a Star
-			</h1>
-			<p class="text-sm leading-relaxed text-white/45">
-				Dedicate a star in the sky to a companion you want to remember.
-			</p>
-		</div>
 
-		{
-			error && (
-				<div class="flex gap-3 rounded-xl border border-red-400/15 bg-red-500/8 px-4 py-3 text-sm text-red-300/90">
-					<span class="mt-px shrink-0 text-red-400/70">⚠</span>
-					<span>{error}</span>
-				</div>
-			)
-		}
-
-		<Form />
-
-		<a
-			href="/"
-			class="self-center text-xs tracking-wider text-white/40 hover:underline"
-		>
-			Privacy Policy
-		</a>
-	</div>
+	<Form error={error} />
 </div>
 
 <audio id="ambient" loop>
@@ -213,8 +214,7 @@ const stars = entries.rows
 	import Panzoom from "@panzoom/panzoom";
 	import { focusStar } from "@utils/focusStar";
 
-	(window as any).focusStar = (id: string | number) =>
-		focusStar(panzoom, id);
+	(window as any).focusStar = (id: string | number) => focusStar(panzoom, id);
 
 	const canvas = document.getElementById("canvas")!;
 	const viewport = document.getElementById("viewport")!;
@@ -257,9 +257,6 @@ const stars = entries.rows
 
 	const urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.get("focus")) {
-		setTimeout(
-			() => focusStar(panzoom, urlParams.get("focus") as string),
-			100,
-		);
+		setTimeout(() => focusStar(panzoom, urlParams.get("focus") as string), 100);
 	}
 </script>
