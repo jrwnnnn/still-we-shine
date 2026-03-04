@@ -45,8 +45,6 @@ if (Astro.request.method === "POST") {
 		error = "Security check failed. Please try again.";
 	} else if (image && image.size > 2 * 1024 * 1024) {
 		error = "Image must be under 2MB.";
-	} else if (!name || !birthYear || !deathYear) {
-		error = "Please fill in all required fields.";
 	} else if (parseInt(birthYear) > parseInt(deathYear)) {
 		error = "Birth year must be before death year.";
 	} else {
@@ -58,8 +56,8 @@ if (Astro.request.method === "POST") {
 					import.meta.env.AZURE_CONNECTION_STRING,
 				);
 				const containerClient = blobService.getContainerClient("images");
-				const blobName = `${Date.now()}-${image.name.replace(/\s+/g, "-")}`;
-				const blobClient = containerClient.getBlockBlobClient(blobName);
+				const fileName = `${Date.now()}-${image.name.replace(/\s+/g, "-")}`;
+				const blobClient = containerClient.getBlockBlobClient(fileName);
 
 				const arrayBuffer = await image.arrayBuffer();
 				await blobClient.uploadData(arrayBuffer, {
