@@ -1,7 +1,7 @@
 ---
 import { createClient } from "@libsql/client";
 import { BlobServiceClient } from "@azure/storage-blob";
-import { setPosition } from "@utils/setPosition";
+import { setPosition } from "../utils/algorithm/multi-parallax";
 import { hashSeed } from "@utils/random";
 import { getRandomStar } from "@utils/star";
 import renderStar from "@utils/renderStar";
@@ -99,8 +99,8 @@ const stars = entries.rows
 		return {
 			id: row.id,
 			...visual,
-			x: 35 + pos.x * 0.3,
-			y: 35 + pos.y * 0.3,
+			x: pos.x,
+			y: pos.y,
 			starName: starData?.Name || starData?.ID,
 			name: row.name,
 			birthYear: row.birth_year,
@@ -119,14 +119,14 @@ deploy
 -->
 <Layout>
 	<div id="viewport" class="bg-sky-dark fixed inset-0 overflow-hidden">
-		<div id="canvas" class="absolute h-[375vmax] w-[375vmax] md:h-[187.5vmax]">
-			<Sky star_intensity="1000" meteor_count="10" />
+		<div id="canvas" class="absolute h-[375vmax] w-[375vmax] md:h-[187.5vmax] flex items-center justify-center">
+			<Sky star_intensity="1000" meteor_count=5" />
 			{
 				stars.map((s) => (
 					<a
 						href={`/star/${s.id}`}
 						class="absolute flex flex-col items-center"
-						style={`left:${s.x}%;top:${s.y}%;transform:translate(-50%,-50%);`}
+						style={`left:${s.x}%;top:${s.y}%;`}
 					>
 						<div class="peer" id={s.id as string}>
 							<Star
@@ -162,6 +162,8 @@ deploy
 			<a
 				href="about"
 				class="pointer-events-auto cursor-pointer text-xl font-bold tracking-[5px] uppercase"
+				content-visibility:
+				auto;
 			>
 				Still, They Shine
 			</a>
