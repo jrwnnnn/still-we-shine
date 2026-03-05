@@ -75,7 +75,7 @@ if (Astro.request.method === "POST") {
 				args: [star.HR, name, birthYear, deathYear, message, imageUrl],
 			});
 
-			return Astro.redirect("/star/" + result.lastInsertRowid);
+			return Astro.redirect("/?focus=" + result.lastInsertRowid);
 		}
 	}
 }
