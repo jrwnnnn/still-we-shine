@@ -47,7 +47,7 @@ if (Astro.request.method === "POST") {
 }
 ---
 
-<Layout>
+<Layout title={row.name as string} robots="noindex, nofollow">
 	<div class="fixed inset-0 overflow-hidden">
 		<Sky star_intensity="50" nebula={false} meteor_count="1" />
 		{

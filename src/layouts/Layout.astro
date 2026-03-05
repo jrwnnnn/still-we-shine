@@ -1,5 +1,11 @@
 ---
 import "../styles/global.css";
+interface Props {
+	title?: string;
+	robots?: string;
+}
+
+const { title = "Still, They Shine", robots = "index, follow" } = Astro.props;
 ---
 
 <!doctype html>
@@ -7,11 +13,27 @@ import "../styles/global.css";
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="canonical" href={Astro.url} />
+
+		<title>{title}</title>
 		<meta
 			name="description"
-			content="A night sky where each star remembers a loved one who has passed."
+			content="Inspired by Spiritfarer, this site is a quiet space to remember the companions who have traveled onward. Here, you can share a memory of a pet who has passed away, and they will be appointed to a real star in the night sky. It is a simple, way to honor their journey, keeping their light shining above us so they are never truly gone."
 		/>
-		<title>Still, We Shine</title>
+		<meta name="robots" content={robots} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.url} />
+		<meta property="og:title" content={title} />
+		<meta
+			property="og:description"
+			content="Inspired by Spiritfarer, this site is a quiet space to remember the companions who have traveled onward. Here, you can share a memory of a pet who has passed away, and they will be appointed to a real star in the night sky. It is a simple, way to honor their journey, keeping their light shining above us so they are never truly gone."
+		/>
+		<meta property="og:image" content="/meta/cover.png" />
+
+		<meta name="twitter:card" content="summary_large_image" />
+
+		<meta name="theme-color" content="#080c18" />
+		<link rel="icon" type="image/png" href="/favicon.png" />
 	</head>
 	<body>
 		<slot />
