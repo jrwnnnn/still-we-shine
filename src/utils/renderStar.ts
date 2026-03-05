@@ -1,4 +1,4 @@
-import { setChromaticity, setSize, setLuminosity } from "./star";
+import { setChromaticity, setSize, setLuminosity } from "./starProps";
 import { seededRandom, hashSeed } from "./random";
 
 export interface Star {

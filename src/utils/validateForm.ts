@@ -1,4 +1,4 @@
-import { getRandomStar } from "./star";
+import { getRandomStar } from "./starProps";
 
 const ipCache = new Map<string, { count: number; lastReset: number }>();
 const WINDOW = 5 * 60 * 1000;

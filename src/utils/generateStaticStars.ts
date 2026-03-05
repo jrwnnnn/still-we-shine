@@ -1,4 +1,4 @@
-import { setChromaticity, setSize, setLuminosity } from "./star";
+import { setChromaticity, setSize, setLuminosity } from "./starProps";
 import { seededRandom } from "./random";
 
 const SPECTRAL_TYPES = ["O", "B", "A", "F", "F", "G", "G", "K", "M"];
