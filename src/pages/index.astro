@@ -191,19 +191,19 @@ deploy
 			</button>
 		</div>
 	</div>
-</Layout>
-<div
-	id="formModal"
-	class="fixed inset-0 z-100 hidden h-full w-full items-center justify-center p-5"
->
 	<div
-		id="formBackdrop"
-		class="pointer-events-auto fixed inset-0 backdrop-blur-sm"
+		id="formModal"
+		class="fixed inset-0 z-100 hidden h-full w-full items-center justify-center p-5"
 	>
-	</div>
+		<div
+			id="formBackdrop"
+			class="pointer-events-auto fixed inset-0 backdrop-blur-sm"
+		>
+		</div>
 
-	<Form error={error} />
-</div>
+		<Form error={error} />
+	</div>
+</Layout>
 
 <audio id="ambient" loop>
 	<source src="sounds/The Museum - Andrew Prahlow.mp3" type="audio/mpeg" />
