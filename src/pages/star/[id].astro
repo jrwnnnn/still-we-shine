@@ -33,11 +33,23 @@ const distance = starData?.Distance ? `${starData.Distance} ly` : "Unknown";
 
 const seeds = [1003, 2507, 3714, 4221, 5832, 6947, 8123, 9456];
 const stars = generateStaticStars(seeds);
+
+if (Astro.request.method === "POST") {
+	const formData = await Astro.request.formData();
+	const star_id = formData.get("id") as number | null;
+
+	if (star_id) {
+		await turso.execute({
+			sql: "INSERT INTO reports (star_id) VALUES (?)",
+			args: [star_id],
+		});
+	}
+}
 ---
 
 <Layout>
 	<div class="fixed inset-0 overflow-hidden">
-		<Sky star_intensity="50" nebula={false} meteor_count="2"/>
+		<Sky star_intensity="50" nebula={false} meteor_count="1" />
 		{
 			stars.map((s) => (
 				<div class="absolute scale-[0.3]" style={`left:${s.x}%;top:${s.y}%;`}>
@@ -57,11 +69,12 @@ const stars = generateStaticStars(seeds);
 
 		<img
 			src={row.image_url as string}
-			alt={`Photo of ${row.name}`}
+			alt={`${row.name}`}
 			class="animate-fade-in h-full w-full object-cover opacity-0 grayscale"
 			style="-webkit-mask-image: radial-gradient(circle, black 30%, transparent 80%); mask-image: radial-gradient(circle, black 30%, transparent 80%); transition: opacity 2s;"
+			loading="eager"
 			oncontextmenu="return false;"
-			onload="this.style.opacity=0.04"
+			onload="this.style.opacity = 0.04"
 		/>
 		<style>
 			@keyframes fade-in {
@@ -149,28 +162,32 @@ const stars = generateStaticStars(seeds);
 					</div>
 				</div>
 			</div>
-			<a
-				href="https://github.com/jrwnnnn/graveyard-of-stars"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="flex items-center opacity-50 hover:opacity-80 transition"
-			>
-				<img
-					class="h-5 object-contain invert"
-					src="/icons/report_flag.svg"
-					loading="lazy"
-					alt="GitHub Icon"
-				/>
-				<span class="ml-2">Report an issue</span>
-			</a>
+			<form method="POST">
+				<input type="hidden" name="id" value={row.id as number} />
+				<button
+					id="reportBtn"
+					type="submit"
+					class="flex items-center opacity-50 transition hover:opacity-80"
+				>
+					<img
+						class="h-4 object-contain invert"
+						src="/icons/report_flag.svg"
+						loading="lazy"
+						alt="GitHub Icon"
+					/>
+					<span class="ml-2 text-sm">Report an issue</span>
+				</button>
+			</form>
 		</div>
 	</main>
 	<audio id="ambient" loop>
-		<source
-			src="/sounds/Stellas Departure - Max LL.mp3"
-			type="audio/mpeg"
-		/>
+		<source src="/sounds/Stellas Departure - Max LL.mp3" type="audio/mpeg" />
 	</audio>
 </Layout>
 
 <script src="../../utils/ambientSound.ts"></script>
+<script>
+	document.getElementById("reportBtn")!.addEventListener("click", () => {
+		window.alert("Thank you for your report. We will review it shortly.");
+	});
+</script>
