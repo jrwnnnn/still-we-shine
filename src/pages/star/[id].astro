@@ -49,7 +49,11 @@ if (Astro.request.method === "POST") {
 
 <Layout title={row.name as string} robots="noindex, nofollow">
 	<div class="fixed inset-0 overflow-hidden">
-		<Sky star_intensity="50" nebula={row.image_url ? false : true} meteor_count="1" />
+		<Sky
+			star_intensity="50"
+			nebula={row.image_url ? false : true}
+			meteor_count="1"
+		/>
 		{
 			stars.map((s) => (
 				<div class="absolute scale-[0.3]" style={`left:${s.x}%;top:${s.y}%;`}>
@@ -74,7 +78,6 @@ if (Astro.request.method === "POST") {
 			style="-webkit-mask-image: radial-gradient(circle, black 30%, transparent 80%); mask-image: radial-gradient(circle, black 30%, transparent 80%); transition: opacity 2s;"
 			loading="eager"
 			oncontextmenu="return false;"
-			onload="this.style.opacity = 0.04"
 		/>
 		<style>
 			@keyframes fade-in {

@@ -9,7 +9,6 @@ export function isRateLimited(ip: string, peek = false): boolean {
 	const now = Date.now();
 	let user = ipCache.get(ip);
 
-	console.log(ipCache)
 	if (!user || now - user.lastReset > WINDOW) {
 		user = { count: 0, lastReset: now };
 		ipCache.set(ip, user);
@@ -42,7 +41,6 @@ export async function validateSubmission(formData: FormData, ip: string) {
 	const name = (formData.get("name") as string)?.trim();
 	const birthYear = parseInt(formData.get("birth_year") as string);
 	const deathYear = parseInt(formData.get("death_year") as string);
-	const message = formData.get("message") as string;
 	const image = formData.get("image") as File;
 
 	if (!name) return "Pet name is required.";
