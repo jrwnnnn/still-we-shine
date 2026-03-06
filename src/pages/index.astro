@@ -32,7 +32,7 @@ if (Astro.request.method === "POST") {
 		}
 
 		if (!error) {
-			const insert = await turso.execute({
+				const { lastInsertRowid } = await turso.execute({
 				sql: "INSERT INTO stars (star_hr, name, birth_year, death_year, message, image_url) VALUES (?, ?, ?, ?, ?, ?)",
 				args: [
 					result.star.HR,
@@ -43,7 +43,7 @@ if (Astro.request.method === "POST") {
 					imageUrl,
 				],
 			});
-			return Astro.redirect("/?focus=" + insert.lastInsertRowid);
+				return Astro.redirect("/?focus=" + lastInsertRowid);
 		}
 	}
 }
@@ -201,7 +201,8 @@ const stars = entries.rows
 		{ capture: true },
 	);
 
-	(window as any).focusStar = (id: string | number) => focusStar(panzoom, id);
+	const w = window as unknown as { focusStar?: (id: number) => void };
+	w.focusStar = (id: number) => focusStar(panzoom, id);
 	const urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.get("focus")) {
 		setTimeout(() => focusStar(panzoom, urlParams.get("focus") as string), 100);
