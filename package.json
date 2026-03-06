@@ -1,28 +1,27 @@
 {
-  "name": "astro-temp",
-  "type": "module",
-  "version": "0.0.1",
-  "scripts": {
-    "astro:dev": "astro dev",
-    "astro:build": "astro build",
-    "astro:preview": "astro preview",
-    "astro": "astro",
-    "purge": "tsx scripts/purgeOrphanImages.ts"
-  },
-  "dependencies": {
-    "@astrojs/node": "^9.5.2",
-    "@azure/storage-blob": "^12.31.0",
-    "@libsql/client": "^0.17.0",
-    "@panzoom/panzoom": "^4.6.1",
-    "@tailwindcss/vite": "^4.1.18",
-    "astro": "^5.17.1",
-    "prettier": "^3.8.1",
-    "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.7.2",
-    "sharp": "^0.34.5",
-    "tailwindcss": "^4.1.18"
-  },
-  "devDependencies": {
-    "tsx": "^4.21.0"
-  }
+	"name": "astro-temp",
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"astro:dev": "astro dev",
+		"astro:build": "astro build",
+		"astro:preview": "astro preview",
+		"purge": "tsx scripts/purgeOrphanImages.ts"
+	},
+	"dependencies": {
+		"@astrojs/node": "^9.5.2",
+		"@azure/storage-blob": "^12.31.0",
+		"@libsql/client": "^0.17.0",
+		"@panzoom/panzoom": "^4.6.1",
+		"@tailwindcss/vite": "^4.1.18",
+		"astro": "^5.17.1",
+		"sharp": "^0.34.5",
+		"tailwindcss": "^4.1.18"
+	},
+	"devDependencies": {
+		"prettier": "^3.8.1",
+		"prettier-plugin-astro": "^0.14.1",
+		"prettier-plugin-tailwindcss": "^0.7.2",
+		"tsx": "^4.21.0"
+	}
 }
