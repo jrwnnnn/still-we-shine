@@ -119,10 +119,10 @@ const { error, isBlocked } = Astro.props;
 	src={`https://www.google.com/recaptcha/api.js?render=${import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY}`}
 ></script>
 <script>
-	interface Window {
-		grecaptcha: any;
-	}
-	declare const grecaptcha: any;
+	declare const grecaptcha: {
+		ready: (cb: () => void) => void;
+		execute: (siteKey: string, options: { action: string }) => Promise<string>;
+	};
 
 	const form = document.getElementById("form") as HTMLFormElement | null;
 	const tokenInput = document.getElementById(
