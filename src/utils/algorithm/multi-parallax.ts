@@ -4,7 +4,6 @@ type Point = { seed: number; x: number; y: number; layer?: number };
 
 const placedPoints: Point[] = [];
 const positionCache = new Map<string, { x: number; y: number }>();
-const occupiedCells = new Set<number>();
 
 export function setPosition(
 	seed: number,
