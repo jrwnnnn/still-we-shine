@@ -1,5 +1,8 @@
 name: Purge Orphan Images
 
+permissions:
+  contents: read
+
 on:
   schedule:
     - cron: "0 3 * * *"
