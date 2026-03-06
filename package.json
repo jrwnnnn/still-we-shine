@@ -6,7 +6,9 @@
 		"astro:dev": "astro dev",
 		"astro:build": "astro build",
 		"astro:preview": "astro preview",
-		"purge": "tsx scripts/purgeOrphanImages.ts"
+		"lint": "eslint .",
+		"purge": "tsx scripts/purgeOrphanImages.ts",
+		"typecheck": "astro check"
 	},
 	"dependencies": {
 		"@astrojs/node": "^9.5.2",
@@ -19,9 +21,15 @@
 		"tailwindcss": "^4.1.18"
 	},
 	"devDependencies": {
+		"@astrojs/check": "^0.9.6",
+		"@eslint/js": "^10.0.1",
+		"eslint": "^10.0.2",
+		"eslint-plugin-astro": "^1.6.0",
 		"prettier": "^3.8.1",
 		"prettier-plugin-astro": "^0.14.1",
 		"prettier-plugin-tailwindcss": "^0.7.2",
-		"tsx": "^4.21.0"
+		"tsx": "^4.21.0",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.56.1"
 	}
 }
