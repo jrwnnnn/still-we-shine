@@ -4,13 +4,15 @@
 
 <div align="center">
    <!-- FIND PREMADE BADGES HERE: https://github.com/Ileriayo/markdown-badges -->
-
-   <a href="https://astro.build"><img src="https://img.shields.io/badge/astro-%232C2052.svg?style=for-the-badge&logo=astro&logoColor=white"></a>
-   <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white"></a>
-   <a href="https://typescriptlang.org"><img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"></a>
-   <a href="https://opensource.org/license/mit"><img src="https://img.shields.io/badge/MIT-green?style=for-the-badge"></a>
-   <a href="https://github.com/jrwnnnn/still-they-shine"><img src="https://img.shields.io/github/stars/jrwnnnn/still-they-shine?style=for-the-badge"></a>
+  <a href="https://astro.build"><img src="https://img.shields.io/badge/astro-%232C2052.svg?style=for-the-badge&logo=astro&logoColor=white"></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white"></a>
+  <a href="https://typescriptlang.org"><img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/jrwnnnn/still-they-shine?style=for-the-badge"></a>
+  <a href="https://github.com/jrwnnnn/still-they-shine"><img src="https://img.shields.io/github/stars/jrwnnnn/still-they-shine?style=for-the-badge"></a>
+  <a href="https://github.com/jrwnnnn/still-they-shine/actions"><img src="https://img.shields.io/github/actions/workflow/status/jrwnnnn/still-they-shine/pipeline.yml?style=for-the-badge"></a>
 </div>
+
+<br>
 
 Still, They Shine is a webapp where anyone can place a star in a shared night sky to honor a beloved pet that has passed away. Each star made is tied to a real star in the night sky, giving every companion a small, lasting place among the stars.
 
