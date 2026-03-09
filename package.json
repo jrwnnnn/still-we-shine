@@ -12,6 +12,7 @@
 	},
 	"dependencies": {
 		"@astrojs/node": "^9.5.4",
+		"@astrojs/vercel": "^9.0.4",
 		"@azure/storage-blob": "^12.31.0",
 		"@libsql/client": "^0.17.0",
 		"@panzoom/panzoom": "^4.6.1",
