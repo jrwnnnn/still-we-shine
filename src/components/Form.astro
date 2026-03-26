@@ -37,8 +37,6 @@ const { error, isBlocked } = Astro.props;
 	}
 
 	<form id="form" method="POST" class="space-y-5" enctype="multipart/form-data">
-		<input type="hidden" name="recaptcha_token" id="recaptchaToken" />
-
 		<label for="name" class="form-label">Name</label>
 		<input
 			type="text"
@@ -84,16 +82,14 @@ const { error, isBlocked } = Astro.props;
 			autocomplete="off"
 			class="form-input"
 			maxlength="500"
-			disabled={isBlocked}
-		></textarea>
+			disabled={isBlocked}></textarea>
 
 		<input
 			type="file"
 			name="image"
 			accept="image/png,image/jpeg,image/jpg,image/webp"
 			class="w-full cursor-pointer text-sm text-white/40 file:mr-4 file:cursor-pointer file:rounded-xl file:border file:border-white/10 file:bg-white/6 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white/75 file:transition-all hover:file:bg-white/10 hover:file:text-white"
-			disabled={isBlocked}	
-		
+			disabled={isBlocked}
 		/>
 
 		<div class="pt-1">
@@ -113,39 +109,6 @@ const { error, isBlocked } = Astro.props;
 		Privacy Policy
 	</a>
 </div>
-
-<script
-	is:inline
-	src={`https://www.google.com/recaptcha/api.js?render=${import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY}`}
-></script>
-<script>
-	declare const grecaptcha: {
-		ready: (cb: () => void) => void;
-		execute: (siteKey: string, options: { action: string }) => Promise<string>;
-	};
-
-	const form = document.getElementById("form") as HTMLFormElement | null;
-	const tokenInput = document.getElementById(
-		"recaptchaToken",
-	) as HTMLInputElement | null;
-
-	if (form && tokenInput) {
-		form.addEventListener("submit", (e: SubmitEvent) => {
-			e.preventDefault();
-
-			grecaptcha.ready(() => {
-				grecaptcha
-					.execute(import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY, {
-						action: "submit",
-					})
-					.then((token: string) => {
-						tokenInput.value = token;
-						form.submit();
-					});
-			});
-		});
-	}
-</script>
 
 <style is:global>
 	@reference "../styles/global.css";

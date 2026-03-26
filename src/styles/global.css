@@ -23,7 +23,3 @@ body {
 main {
 	@apply px-5 py-20 md:px-20 lg:px-30;
 }
-
-.grecaptcha-badge {
-	visibility: hidden !important;
-}
