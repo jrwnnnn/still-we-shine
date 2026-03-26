@@ -23,20 +23,8 @@ export function isRateLimited(ip: string, peek = false): boolean {
 	return false;
 }
 
-async function isBot(token: string | null): Promise<boolean> {
-	if (!token) return true;
-	const res = await fetch(
-		`https://www.google.com/recaptcha/api/siteverify?secret=${import.meta.env.RECAPTCHA_SECRET_KEY || process.env.RECAPTCHA_SECRET_KEY}&response=${token}`,
-		{ method: "POST" },
-	);
-	const data = await res.json();
-	return !data.success || data.score < 0.5;
-}
-
 export async function validateSubmission(formData: FormData, ip: string) {
 	if (isRateLimited(ip)) return "Too many requests.";
-	if (await isBot(formData.get("recaptcha_token") as string))
-		return "Security check failed. Please try again.";
 
 	const name = (formData.get("name") as string)?.trim();
 	const birthYear = parseInt(formData.get("birth_year") as string);
